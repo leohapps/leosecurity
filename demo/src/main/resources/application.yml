@@ -1,0 +1,75 @@
+server:
+  port: 10088
+  servlet:
+    session:
+      timeout: 12h
+spring:
+  application:
+    name: jc_op_server
+  datasource:
+    name: mysql
+    druid:
+      url: jdbc:mysql://localhost:3306/opserver?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&useAffectedRows=true&allowMultiQueries=true
+      username: root
+      password: passw0rd
+      initial-size: 1
+      min-idle: 1
+      max-active: 10
+      # ��ȡ���ӵȴ���ʱʱ��
+      max-wait: 60000
+      time-between-eviction-runs-millis: 300000
+      validation-query: select 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      #��PSCache����ָ��ÿ��������PSCache�Ĵ�С��oracle��Ϊtrue��mysql��Ϊfalse���ֿ�ֱ�϶��Ƽ�����Ϊfalse
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+  redis:
+    host: 10.18.35.71
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+    timeout: 10000ms
+    password: root123
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  resources:
+    static-locations: classpath:/html/
+  thymeleaf:
+    prefix: classpath:/html/
+    suffix: .html
+    mode: LEGACYHTML5
+    encoding: UTF-8
+    cache: false
+  #静态文件访问存放地址
+
+  # thymeleaf 模板存放地址
+
+#mybatis pagehelper
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: sohu.mptc.di.promotion.pojo
+  mapper-locations: classpath:mappers/*.xml
+
+
+rest:
+  connectTimeout: 5000
+  readTimeout: 5000
