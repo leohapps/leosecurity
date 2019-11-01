@@ -1,5 +1,5 @@
 server:
-  port: 10088
+  port: 9080
   servlet:
     session:
       timeout: 12h
@@ -73,3 +73,21 @@ mybatis:
 rest:
   connectTimeout: 5000
   readTimeout: 5000
+
+sso:
+  server:
+    host: https://sso.leohapps.com
+
+  client:
+    appid: b52ce075-d797-4cb7-97f5-2d753ae5b9d4
+    secret: 3udfNAIfHMfu3fFd
+    signKey: 67jAgWmXbUB4ZxX8
+  url:
+    login: ${sso.server.host}/login?appid=${sso.client.appid}
+    logout: ${sso.server.host}/logout?appid=${sso.client.appid}
+
+app:
+  host: http://localhost:9080
+  path: /
+  url: ${app.host}${app.path}
+  logout: ${app.host}/logout

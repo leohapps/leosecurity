@@ -8,6 +8,7 @@ package com.leohapps.springsecurity.demo.service;
 import com.leohapps.springsecurity.demo.pojo.JcSysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,7 +43,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,
         log.info("get User name : {}", name);
         JcSysUser user = sysUserService.findByUserName(name);
         if (user == null) {
-            throw new UsernameNotFoundException(name+" not exist");
+            user = new JcSysUser();
+            user.setUserName("anonymous");
         }
         return user;
     }

@@ -9,12 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
+import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -28,8 +33,24 @@ import javax.servlet.http.HttpSession;
 @RestController
 public class LoginController {
 
-    //@Autowired
-    //private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    /** 测试ssoServer回调接口*/
+    @RequestMapping(value = "/" , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public String gate(HttpServletRequest request, HttpServletResponse response,HttpSession session) {
+        log.info("callback api ...");
+        String ticket = request.getParameter("ticket");
+        log.info("ticket-{}",ticket);
+        String username = CasAuthenticationFilter.CAS_STATEFUL_IDENTIFIER;
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username,ticket);
+        Authentication authentication = authenticationManager.authenticate(token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+        log.info(" login success...");
+        return "price";
+    }
+
 
     @RequestMapping(value = "/jc/op/refund/api", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String refund() {
@@ -37,7 +58,7 @@ public class LoginController {
       return "refund";
     }
 
-    @RequestMapping(value = "/jc/op/refund/api/v1/sales/pricestrategy" , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/leohapps" , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String price() {
         log.info("price api ...");
         return "price";

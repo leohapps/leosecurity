@@ -16,6 +16,9 @@ import java.util.Iterator;
 public class UrlAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication auth, Object o, Collection<ConfigAttribute> cas){
+        if (auth instanceof AnonymousAuthenticationToken) {
+            throw new BadCredentialsException("未登录");
+        }
         Iterator<ConfigAttribute> iterator = cas.iterator();
         while (iterator.hasNext()) {
             ConfigAttribute ca = iterator.next();
